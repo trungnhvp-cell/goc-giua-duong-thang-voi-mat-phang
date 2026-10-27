@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ôn tập: Góc giữa đường thẳng và mặt phẳng</title>
+<style>
+:root{
+  --bg:#f4f7fb; --card:#ffffff; --ink:#1c2b3a; --muted:#5b7183;
+  --brand:#1f6feb; --brand-d:#12508f; --ok:#0f9d58; --ok-bg:#e8f8ef;
+  --no:#d93025; --no-bg:#fdecea; --warn:#b26a00; --warn-bg:#fff6e5;
+  --line:#dbe6f0; --shadow:0 2px 12px rgba(20,50,90,.08);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  line-height:1.75; font-size:16px;
+}
+h1,h2,h3,h4{line-height:1.35;margin:0 0 .5em}
+header.top{
+  background:linear-gradient(135deg,#12508f,#1f6feb 55%,#3f9bf5);
+  color:#fff; padding:26px 20px 22px; box-shadow:var(--shadow);
+}
+header.top .wrap{max-width:1080px;margin:0 auto}
+header.top h1{font-size:1.55rem;margin:0 0 6px;letter-spacing:.2px}
+header.top p{margin:0;opacity:.92;font-size:.95rem}
+nav.tabs{
+  position:sticky; top:0; z-index:50; background:#fff;
+  border-bottom:1px solid var(--line); box-shadow:0 2px 8px rgba(20,50,90,.06);
+}
+nav.tabs .wrap{max-width:1080px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:0 12px}
+nav.tabs button{
+  border:0;background:none;padding:14px 16px;font-size:.95rem;font-weight:600;
+  color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;
+  font-family:inherit;
+}
+nav.tabs button:hover{color:var(--brand)}
+nav.tabs button.on{color:var(--brand);border-bottom-color:var(--brand)}
+main{max-width:1080px;margin:0 auto;padding:24px 16px 80px}
+section.tabpane{display:none}
+section.tabpane.on{display:block;animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ===== Math typography ===== */
+.mth{font-family:"Cambria Math","Cambria","Times New Roman",Georgia,serif;font-size:1.05em}
+i.v{font-style:italic}
+.vec{position:relative;display:inline-block;font-style:italic;padding:0 .12em}
+.vec::before{content:"";position:absolute;left:.03em;right:.16em;top:.02em;height:.055em;background:currentColor;border-radius:1px}
+.vec::after{content:"";position:absolute;right:.03em;top:-.13em;width:0;height:0;
+  border-left:.26em solid currentColor;border-top:.135em solid transparent;border-bottom:.135em solid transparent}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;
+  margin:0 .2em;line-height:1.22;font-size:.94em;position:relative;top:-.06em}
+.frac>span:first-child{border-bottom:1.2px solid currentColor;padding:0 .32em}
+.frac>span:last-child{padding:0 .32em}
+.op{font-style:normal}
+sup,sub{font-size:.72em}
+
+/* ===== Cards ===== */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:20px 22px;margin:0 0 18px;box-shadow:var(--shadow)}
+.card h3{font-size:1.08rem;color:var(--brand-d);display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;
+  border-radius:9px;background:var(--brand);color:#fff;font-size:.82rem;font-weight:700;padding:0 7px;flex:none}
+.card ul,.card ol{margin:.4em 0 .4em 1.2em;padding-left:.6em}
+.card li{margin:.3em 0}
+.hl{background:#fff3bf;padding:0 .25em;border-radius:4px}
+.note{border-left:4px solid var(--warn);background:var(--warn-bg);padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+.note b{color:var(--warn)}
+.okbox{border-left:4px solid var(--ok);background:var(--ok-bg);padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+.formula{background:#f2f7ff;border:1px dashed #a9c8ef;border-radius:12px;padding:14px 18px;margin:12px 0;text-align:center;font-size:1.08rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+figure{margin:14px 0;text-align:center}
+svg{max-width:100%;height:auto}
+figcaption{font-size:.88rem;color:var(--muted);margin-top:6px}
+
+/* ===== Buttons ===== */
+.btn{border:0;border-radius:10px;padding:10px 18px;font-size:.94rem;font-weight:600;cursor:pointer;
+  font-family:inherit;transition:.18s;background:var(--brand);color:#fff}
+.btn:hover{background:var(--brand-d)}
+.btn.ghost{background:#eef4fc;color:var(--brand-d)}
+.btn.ghost:hover{background:#dde9f8}
+.btn.small{padding:7px 13px;font-size:.85rem}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+
+/* ===== Practice ===== */
+.q{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.q .qh{display:flex;gap:10px;font-weight:600;margin-bottom:10px}
+.qnum{flex:none;width:30px;height:30px;border-radius:50%;background:#eef4fc;color:var(--brand-d);
+  display:flex;align-items:center;justify-content:center;font-size:.86rem;font-weight:700}
+.opts{display:grid;gap:8px;margin-top:8px}
+.opt{display:flex;gap:11px;align-items:flex-start;padding:11px 14px;border:1.6px solid var(--line);
+  border-radius:10px;background:#fbfdff;cursor:pointer;font-size:.96rem;transition:.15s;text-align:left;font-family:inherit;color:inherit;width:100%}
+.opt:hover:not(.dis){border-color:var(--brand);background:#f2f7ff}
+.opt .lt{flex:none;width:24px;height:24px;border-radius:7px;background:#e8eef7;color:#3b5a78;
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem}
+.opt.dis{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.right .lt{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--no);background:var(--no-bg)}
+.opt.wrong .lt{background:var(--no);color:#fff}
+.sol{margin-top:12px;padding:13px 16px;border-radius:10px;background:#f5f9ff;border:1px solid #cfe0f5;font-size:.94rem}
+.sol .ttl{font-weight:700;color:var(--brand-d);margin-bottom:4px}
+.review{margin-top:10px;padding:12px 16px;border-radius:10px;background:var(--warn-bg);
+  border:1px solid #ffd79a;font-size:.93rem;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.review .ttl{font-weight:700;color:var(--warn)}
+.bar{height:8px;background:#e6eef8;border-radius:99px;overflow:hidden;margin:10px 0}
+.bar>div{height:100%;background:linear-gradient(90deg,#1f6feb,#4fa3ff);width:0;transition:.3s}
+.sethdr{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.score{font-weight:700;color:var(--brand-d)}
+
+/* ===== Exam ===== */
+.exambar{position:sticky;top:52px;z-index:40;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:12px 18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  box-shadow:0 4px 16px rgba(20,50,90,.1);margin-bottom:16px}
+.timer{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.22rem;color:var(--brand-d);
+  background:#eef4fc;padding:6px 14px;border-radius:10px;letter-spacing:.5px}
+.timer.low{color:#fff;background:var(--no);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.65}}
+.result{background:#fff;border:2px solid var(--brand);border-radius:14px;padding:20px;margin-bottom:18px;text-align:center}
+.result .big{font-size:2rem;font-weight:800;color:var(--brand-d)}
+.tag{display:inline-block;font-size:.76rem;font-weight:700;padding:2px 9px;border-radius:99px;background:#eef4fc;color:var(--brand-d);margin-left:6px}
+.hidden{display:none!important}
+@media(max-width:600px){
+  body{font-size:15px}
+  .card,.q{padding:15px 15px}
+  .exambar{top:48px;gap:10px;padding:10px 12px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>Góc giữa đường thẳng và mặt phẳng</h1>
+    <p>Lý thuyết trọng tâm · 3 bộ luyện tập có phản hồi · 3 đề 22 câu có tính giờ</p>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="wrap">
+    <button class="on" data-tab="theory">📘 Kiến thức cơ bản</button>
+    <button data-tab="practice">✏️ Luyện tập (3 bộ)</button>
+    <button data-tab="exam">⏱️ Đề kiểm tra (3 đề · 22 câu)</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ==================== LÝ THUYẾT ==================== -->
+<section class="tabpane on" id="theory">
+
+  <div class="card" id="the-k1">
+    <h3><span class="badge">1</span> Định nghĩa góc giữa đường thẳng và mặt phẳng</h3>
+    <p>Cho đường thẳng <span class="mth"><i>d</i></span> và mặt phẳng <span class="mth">(<i>α</i>)</span>. Gọi <span class="mth"><i>φ</i></span> là góc giữa <span class="mth"><i>d</i></span> và <span class="mth">(<i>α</i>)</span>, kí hiệu <span class="mth"><i>φ</i> = (<i>d</i>, (<i>α</i>))</span>.</p>
+    <ul>
+      <li>Nếu <span class="mth"><i>d</i> ⊥ (<i>α</i>)</span> thì <span class="mth"><i>φ</i> = 90°</span>.</li>
+      <li>Nếu <span class="mth"><i>d</i></span> không vuông góc với <span class="mth">(<i>α</i>)</span>: gọi <span class="mth"><i>d</i>′</span> là <b>hình chiếu vuông góc</b> của <span class="mth"><i>d</i></span> trên <span class="mth">(<i>α</i>)</span>, khi đó
+        <span class="mth"><i>φ</i> = (<i>d</i>, <i>d</i>′)</span>.</li>
+      <li>Nếu <span class="mth"><i>d</i> ⊂ (<i>α</i>)</span> hoặc <span class="mth"><i>d</i> ∥ (<i>α</i>)</span> (<span class="mth"><i>d</i> ⊄ (<i>α</i>)</span>) thì <span class="mth"><i>φ</i> = 0°</span>.</li>
+    </ul>
+    <div class="formula"><b>0° ≤ (<i>d</i>, (<i>α</i>)) ≤ 90°</b> — góc giữa đường thẳng và mặt phẳng <b>không bao giờ là góc tù</b>.</div>
+
+    <figure>
+      <svg viewBox="0 0 420 265" role="img" aria-label="Hình minh họa góc giữa đường thẳng và mặt phẳng">
+        <defs>
+          <marker id="ar1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L7,3 L0,6 z" fill="#c0392b"/>
+          </marker>
+        </defs>
+        <!-- mặt phẳng -->
+        <polygon points="40,190 250,190 350,140 140,140" fill="#e8f1fb" stroke="#4a7fb5" stroke-width="1.6"/>
+        <text x="322" y="163" font-size="15" font-style="italic" fill="#2c5f8f">(α)</text>
+        <!-- đường thẳng d -->
+        <line x1="116" y1="214" x2="272" y2="58" stroke="#c0392b" stroke-width="2.2" marker-end="url(#ar1)"/>
+        <text x="280" y="55" font-size="15" font-style="italic" fill="#c0392b">d</text>
+        <!-- đường vuông góc MH -->
+        <line x1="270" y1="60" x2="270" y2="165" stroke="#7a7a7a" stroke-width="1.6" stroke-dasharray="6 4"/>
+        <!-- hình chiếu AH -->
+        <line x1="112" y1="172" x2="338" y2="163" stroke="#1f6feb" stroke-width="2"/>
+        <text x="300" y="156" font-size="14" font-style="italic" fill="#1f6feb">d′</text>
+        <!-- góc -->
+        <path d="M196,167 A40,40 0 0 0 178,142" fill="none" stroke="#0f9d58" stroke-width="2"/>
+        <text x="200" y="140" font-size="15" font-style="italic" fill="#0f9d58">φ</text>
+        <!-- vuông góc tại H -->
+        <path d="M270,152 L257,152 L257,165" fill="none" stroke="#7a7a7a" stroke-width="1.4"/>
+        <!-- điểm -->
+        <circle cx="160" cy="170" r="3.6" fill="#1c2b3a"/><text x="140" y="166" font-size="15" font-style="italic">A</text>
+        <circle cx="270" cy="60" r="3.6" fill="#1c2b3a"/><text x="280" y="66" font-size="15" font-style="italic">M</text>
+        <circle cx="270" cy="165" r="3.6" fill="#1c2b3a"/><text x="279" y="182" font-size="15" font-style="italic">H</text>
+      </svg>
+      <figcaption><span class="mth"><i>M</i> ∈ <i>d</i></span>, <span class="mth"><i>MH</i> ⊥ (<i>α</i>)</span> tại <span class="mth"><i>H</i></span>, <span class="mth"><i>A</i> = <i>d</i> ∩ (<i>α</i>)</span> ⇒ <span class="mth">(<i>d</i>,(<i>α</i>)) = ∠<i>MAH</i></span>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="card" id="the-k2">
+    <h3><span class="badge">2</span> Các bước xác định góc giữa đường thẳng và mặt phẳng</h3>
+    <ol>
+      <li><b>Bước 1 — Tìm giao điểm.</b> Xác định <span class="mth"><i>O</i> = <i>d</i> ∩ (<i>α</i>)</span> (nếu <span class="mth"><i>d</i> ∥ (<i>α</i>)</span> thì kết luận ngay góc bằng <span class="mth">0°</span>).</li>
+      <li><b>Bước 2 — Dựng đường vuông góc.</b> Lấy điểm <span class="mth"><i>M</i> ∈ <i>d</i></span> (<span class="mth"><i>M</i> ≠ <i>O</i></span>), kẻ <span class="mth"><i>MH</i> ⊥ (<i>α</i>)</span> tại <span class="mth"><i>H</i></span>.</li>
+      <li><b>Bước 3 — Xác định góc.</b> Nối <span class="mth"><i>OH</i></span>: <span class="mth"><i>OH</i></span> là hình chiếu của <span class="mth"><i>d</i></span> trên <span class="mth">(<i>α</i>)</span>. Góc cần tìm là <span class="mth"><i>φ</i> = ∠<i>MOH</i></span>.</li>
+      <li><b>Bước 4 — Tính toán.</b> Trong tam giác vuông <span class="mth"><i>MHO</i></span> (vuông tại <span class="mth"><i>H</i></span>):
+        <div class="formula">
+          <span class="mth"><span class="op">sin</span> <i>φ</i> = <span class="frac"><span><i>MH</i></span><span><i>MO</i></span></span></span>
+          &nbsp;&nbsp;·&nbsp;&nbsp;
+          <span class="mth"><span class="op">tan</span> <i>φ</i> = <span class="frac"><span><i>MH</i></span><span><i>OH</i></span></span></span>
+          &nbsp;&nbsp;·&nbsp;&nbsp;
+          <span class="mth"><span class="op">cos</span> <i>φ</i> = <span class="frac"><span><i>OH</i></span><span><i>OM</i></span></span></span>
+        </div>
+      </li>
+      <li><b>Bước 5 — Kết luận</b> góc (nhớ: kết quả luôn nằm trong <span class="mth">[0°; 90°]</span>).</li>
+    </ol>
+
+    <div class="note">
+      <b>Mẹo cực nhanh:</b> nếu đã biết khoảng cách <span class="mth"><i>h</i> = <i>d</i>(<i>M</i>, (<i>α</i>))</span> và độ dài <span class="mth"><i>MO</i></span> thì
+      <span class="mth"><span class="op">sin</span> <i>φ</i> = <span class="frac"><span><i>h</i></span><span><i>MO</i></span></span></span>.
+      Đây là công thức “ăn điểm” cho câu hỏi trắc nghiệm.
+    </div>
+
+    <figure>
+      <svg viewBox="0 0 420 250" role="img" aria-label="Tam giác vuông MHO">
+        <line x1="30" y1="215" x2="390" y2="215" stroke="#4a7fb5" stroke-width="1.6"/>
+        <text x="30" y="238" font-size="14" font-style="italic" fill="#2c5f8f">(α)</text>
+        <polygon points="60,215 250,215 250,62" fill="#eaf3fd" stroke="none"/>
+        <line x1="60" y1="215" x2="250" y2="215" stroke="#1f6feb" stroke-width="2.2"/>
+        <line x1="250" y1="215" x2="250" y2="62" stroke="#c0392b" stroke-width="2.2"/>
+        <line x1="60" y1="215" x2="250" y2="62" stroke="#0f9d58" stroke-width="2.2"/>
+        <path d="M250,200 L235,200 L235,215" fill="none" stroke="#555" stroke-width="1.6"/>
+        <path d="M96,215 A36,36 0 0 0 80,197" fill="none" stroke="#0f9d58" stroke-width="2"/>
+        <text x="100" y="205" font-size="15" font-style="italic" fill="#0f9d58">φ</text>
+        <circle cx="60" cy="215" r="3.6"/><text x="42" y="234" font-size="15" font-style="italic">O</text>
+        <circle cx="250" cy="215" r="3.6"/><text x="240" y="236" font-size="15" font-style="italic">H</text>
+        <circle cx="250" cy="62" r="3.6"/><text x="258" y="60" font-size="15" font-style="italic">M</text>
+        <text x="150" y="152" font-size="14" font-style="italic" fill="#0f9d58">MO</text>
+        <text x="258" y="145" font-size="14" font-style="italic" fill="#c0392b">MH = h</text>
+        <text x="120" y="234" font-size="14" font-style="italic" fill="#1f6feb">OH</text>
+      </svg>
+      <figcaption><span class="mth">Δ<i>MHO</i></span> vuông tại <span class="mth"><i>H</i></span> ⇒ <span class="mth"><span class="op">sin</span> <i>φ</i> = <i>MH</i>/<i>MO</i></span>.</figcaption>
+    </figure>
+  </div>
+
+  <div class="card" id="the-k3">
+    <h3><span class="badge">3</span> Kĩ năng dựng hình chiếu – các mô hình quen thuộc</h3>
+    <div class="grid2">
+      <div>
+        <ul>
+          <li><b>Hình chóp có <span class="mth"><i>SA</i> ⊥ (<i>ABCD</i>)</b></span>: hình chiếu của <span class="mth"><i>SB</i>, <i>SC</i>, <i>SD</i>, <i>SM</i></span> trên đáy lần lượt là <span class="mth"><i>AB</i>, <i>AC</i>, <i>AD</i>, <i>AM</i></span>.</li>
+          <li><b>Hình chóp đều</b> (chân đường cao là tâm <span class="mth"><i>O</i></span> của đáy): hình chiếu của cạnh bên <span class="mth"><i>SA</i></span> trên đáy là <span class="mth"><i>OA</i></span>.</li>
+          <li><b>Lăng trụ đứng</b>: hình chiếu của <span class="mth"><i>A</i>′<i>B</i></span> trên đáy là <span class="mth"><i>AB</i></span>.</li>
+          <li><b>Hình hộp chữ nhật</b>: hình chiếu của <span class="mth"><i>A</i>′<i>C</i></span> trên đáy là <span class="mth"><i>AC</i></span>.</li>
+        </ul>
+      </div>
+      <figure style="margin:0">
+        <svg viewBox="0 0 420 270" role="img" aria-label="Hình chóp S.ABCD có SA vuông góc với đáy">
+          <polygon points="110,215 300,215 360,175 170,175" fill="#eaf3fd" stroke="#4a7fb5" stroke-width="1.6"/>
+          <line x1="110" y1="70" x2="110" y2="215" stroke="#333" stroke-width="2"/>
+          <line x1="110" y1="70" x2="300" y2="215" stroke="#333" stroke-width="1.8"/>
+          <line x1="110" y1="70" x2="360" y2="175" stroke="#c0392b" stroke-width="2.4"/>
+          <line x1="110" y1="70" x2="170" y2="175" stroke="#333" stroke-width="1.8"/>
+          <line x1="300" y1="215" x2="360" y2="175" stroke="#333" stroke-width="1.8"/>
+          <line x1="360" y1="175" x2="170" y2="175" stroke="#333" stroke-width="1.8"/>
+          <line x1="170" y1="175" x2="110" y2="215" stroke="#333" stroke-width="1.8"/>
+          <line x1="110" y1="215" x2="360" y2="175" stroke="#1f6feb" stroke-width="2.2" stroke-dasharray="7 4"/>
+          <!-- vuông góc tại A -->
+          <path d="M110,200 L125,200 L125,215" fill="none" stroke="#555" stroke-width="1.5"/>
+          <!-- góc tại C -->
+          <path d="M333,180 A30,30 0 0 1 342,190" fill="none" stroke="#0f9d58" stroke-width="2"/>
+          <text x="316" y="200" font-size="14" font-style="italic" fill="#0f9d58">φ</text>
+          <circle cx="110" cy="70" r="3.6"/><text x="96" y="64" font-size="15" font-style="italic">S</text>
+          <circle cx="110" cy="215" r="3.6"/><text x="90" y="233" font-size="15" font-style="italic">A</text>
+          <circle cx="300" cy="215" r="3.6"/><text x="305" y="232" font-size="15" font-style="italic">B</text>
+          <circle cx="360" cy="175" r="3.6"/><text x="368" y="180" font-size="15" font-style="italic">C</text>
+          <circle cx="170" cy="175" r="3.6"/><text x="152" y="172" font-size="15" font-style="italic">D</text>
+        </svg>
+        <figcaption><span class="mth"><i>SA</i> ⊥ (<i>ABCD</i>)</span> ⇒ <span class="mth">(<i>SC</i>, (<i>ABCD</i>)) = ∠<i>SCA</i></span>.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="card" id="the-k4">
+    <h3><span class="badge">4</span> Phương pháp tọa độ &amp; tích có hướng</h3>
+    <p>Trong không gian <span class="mth"><i>Oxyz</i></span>, cho đường thẳng <span class="mth"><i>d</i></span> có vectơ chỉ phương <span class="mth"><span class="vec">u</span> = (<i>u</i><sub>1</sub>; <i>u</i><sub>2</sub>; <i>u</i><sub>3</sub>)</span> và mặt phẳng <span class="mth">(<i>α</i>)</span> có vectơ pháp tuyến <span class="mth"><span class="vec">n</span> = (<i>n</i><sub>1</sub>; <i>n</i><sub>2</sub>; <i>n</i><sub>3</sub>)</span>.</p>
+
+    <div class="note">
+      <b>Tích có hướng</b> (bắt buộc nhớ):
+      <div class="formula" style="margin:8px 0 0">
+        <span class="mth">[<span class="vec">u</span>, <span class="vec">v</span>] = (<i>u</i><sub>2</sub><i>v</i><sub>3</sub> − <i>u</i><sub>3</sub><i>v</i><sub>2</sub> ; <i>u</i><sub>3</sub><i>v</i><sub>1</sub> − <i>u</i><sub>1</sub><i>v</i><sub>3</sub> ; <i>u</i><sub>1</sub><i>v</i><sub>2</sub> − <i>u</i><sub>2</sub><i>v</i><sub>1</sub>)</span>
+      </div>
+      <div style="margin-top:8px">Vectơ pháp tuyến của mặt phẳng <span class="mth">(<i>ABC</i>)</span>:
+        <span class="mth"><span class="vec">n</span> = [<span class="vec">AB</span>, <span class="vec">AC</span>]</span>.
+      </div>
+    </div>
+
+    <div class="formula">
+      <span class="mth"><span class="op">sin</span> <i>φ</i> = <span class="op">|</span><span class="vec">u</span> · <span class="vec">n</span><span class="op">|</span> / (<span class="op">|</span><span class="vec">u</span><span class="op">|</span> · <span class="op">|</span><span class="vec">n</span><span class="op">|</span>)</span>
+    </div>
+    <ul>
+      <li><span class="mth"><span class="vec">u</span> · <span class="vec">n</span> = <i>u</i><sub>1</sub><i>n</i><sub>1</sub> + <i>u</i><sub>2</sub><i>n</i><sub>2</sub> + <i>u</i><sub>3</sub><i>n</i><sub>3</sub></span></li>
+      <li><span class="mth"><span class="op">|</span><span class="vec">u</span><span class="op">|</span> = √(<i>u</i><sub>1</sub>² + <i>u</i><sub>2</sub>² + <i>u</i><sub>3</sub>²)</span></li>
+      <li>Khoảng cách: <span class="mth"><i>d</i>(<i>M</i>, (<i>α</i>)) = <span class="op">|</span><i>ax</i><sub>0</sub> + <i>by</i><sub>0</sub> + <i>cz</i><sub>0</sub> + <i>d</i><span class="op">|</span> / √(<i>a</i>² + <i>b</i>² + <i>c</i>²)</span></li>
+    </ul>
+
+    <div class="okbox">
+      <b>Phân biệt ba loại góc (rất hay nhầm):</b><br>
+      • Đường thẳng – mặt phẳng → dùng <b>sin</b> &nbsp;|&nbsp;
+      • Hai mặt phẳng → dùng <b>cos</b> &nbsp;|&nbsp;
+      • Hai đường thẳng → dùng <b>cos</b>
+    </div>
+  </div>
+
+  <div class="card" id="the-k5">
+    <h3><span class="badge">5</span> Lỗi sai thường gặp</h3>
+    <ul>
+      <li>❌ Dùng <span class="mth"><span class="op">cos</span></span> cho góc đường thẳng – mặt phẳng (phải dùng <span class="mth"><span class="op">sin</span></span>).</li>
+      <li>❌ Xác định sai hình chiếu: quên kẻ đường vuông góc từ điểm trên <span class="mth"><i>d</i></span> xuống <span class="mth">(<i>α</i>)</span>.</li>
+      <li>❌ Lấy góc tù: góc giữa đường thẳng và mặt phẳng luôn <span class="mth">≤ 90°</span>.</li>
+      <li>❌ Tính <span class="mth">∠<i>SAH</i></span> thay vì <span class="mth">∠<i>SHA</i></span> — cần xác định đúng đỉnh của góc.</li>
+      <li>❌ Quên rằng nếu <span class="mth"><i>d</i> ⊥ (<i>α</i>)</span> thì kết quả là <span class="mth">90°</span> ngay, không cần dựng hình chiếu.</li>
+    </ul>
+  </div>
+
+</section>
+
+<!-- ==================== LUYỆN TẬP ==================== -->
+<section class="tabpane" id="practice">
+  <div id="practiceHost"></div>
+</section>
+
+<!-- ==================== KIỂM TRA ==================== -->
+<section class="tabpane" id="exam">
+  <div id="examHost"></div>
+</section>
+
+</main>
+
+<script>
+/* =========================================================
+   DỮ LIỆU KIẾN THỨC (ánh xạ để nhắc ôn tập)
+   ========================================================= */
+const KREF = {
+  k1:{name:"Định nghĩa góc giữa đường thẳng và mặt phẳng", id:"the-k1"},
+  k2:{name:"Các bước xác định góc", id:"the-k2"},
+  k3:{name:"Kĩ năng dựng hình chiếu", id:"the-k3"},
+  k4:{name:"Phương pháp tọa độ & tích có hướng", id:"the-k4"},
+  k5:{name:"Lỗi sai thường gặp", id:"the-k5"}
+};
+
+/* =========================================================
+   BỘ LUYỆN TẬP
+   ========================================================= */
+const PRACTICE = [
+{
+  id:"p1",
+  title:"Bộ 1 · Nhận biết định nghĩa và cách dựng góc",
+  desc:"Nắm chắc định nghĩa, khoảng giá trị của góc và cách xác định hình chiếu vuông góc.",
+  qs:[
+    {q:"Cho đường thẳng <i>d</i> vuông góc với mặt phẳng (<i>α</i>). Góc giữa <i>d</i> và (<i>α</i>) bằng bao nhiêu?",
+     o:["0°","45°","90°","180°"],a:2,
+     s:"Theo định nghĩa: nếu <i>d</i> ⊥ (<i>α</i>) thì (<i>d</i>, (<i>α</i>)) = 90°.",k:"k1"},
+
+    {q:"Cho đường thẳng <i>d</i> song song với mặt phẳng (<i>α</i>) và <i>d</i> ⊄ (<i>α</i>). Góc giữa <i>d</i> và (<i>α</i>) bằng:",
+     o:["90°","0°","45°","60°"],a:1,
+     s:"Khi <i>d</i> ∥ (<i>α</i>) (hoặc <i>d</i> ⊂ (<i>α</i>)), hình chiếu của <i>d</i> trên (<i>α</i>) song song trùng với <i>d</i> nên góc bằng 0°.",k:"k1"},
+
+    {q:"Gọi <i>φ</i> là góc giữa đường thẳng <i>d</i> và mặt phẳng (<i>α</i>). Khẳng định nào sau đây đúng?",
+     o:["0° &lt; <i>φ</i> &lt; 90°","0° ≤ <i>φ</i> ≤ 90°","0° ≤ <i>φ</i> ≤ 180°","0° &lt; <i>φ</i> &lt; 180°"],a:1,
+     s:"Góc giữa đường thẳng và mặt phẳng luôn thoả mãn 0° ≤ <i>φ</i> ≤ 90°. Đây là điểm khác biệt so với góc giữa hai đường thẳng trong không gian (có thể tù nếu không quy ước).",k:"k1"},
+
+    {q:"Cho hình chóp <i>S.ABCD</i> có <i>SA</i> ⊥ (<i>ABCD</i>). Hình chiếu vuông góc của đường thẳng <i>SC</i> trên mặt phẳng (<i>ABCD</i>) là đường thẳng nào?",
+     o:["<i>SB</i>","<i>AC</i>","<i>AB</i>","<i>SA</i>"],a:1,
+     s:"Vì <i>C</i> ∈ (<i>ABCD</i>) nên hình chiếu của <i>C</i> là <i>C</i>; hình chiếu của <i>S</i> là <i>A</i>. Vậy hình chiếu của <i>SC</i> là <i>AC</i>.",k:"k3"},
+
+    {q:"(Tiếp) Góc giữa đường thẳng <i>SC</i> và mặt phẳng (<i>ABCD</i>) là góc nào sau đây?",
+     o:["∠<i>SCA</i>","∠<i>SAC</i>","∠<i>CSA</i>","∠<i>SCB</i>"],a:0,
+     s:"Góc giữa <i>SC</i> và (<i>ABCD</i>) là góc giữa <i>SC</i> và hình chiếu <i>AC</i> của nó, tức là ∠<i>SCA</i> (đỉnh <i>C</i>).",k:"k2"},
+
+    {q:"Cho <i>M</i> ∈ <i>d</i>, kẻ <i>MH</i> ⊥ (<i>α</i>) tại <i>H</i>, gọi <i>O</i> = <i>d</i> ∩ (<i>α</i>). Đặt <i>φ</i> = (<i>d</i>, (<i>α</i>)). Công thức nào sau đây <b>đúng</b>?",
+     o:["<span class='op'>cos</span> <i>φ</i> = <i>MH</i>/<i>MO</i>","<span class='op'>sin</span> <i>φ</i> = <i>MH</i>/<i>MO</i>","<span class='op'>tan</span> <i>φ</i> = <i>MO</i>/<i>MH</i>","<span class='op'>sin</span> <i>φ</i> = <i>MO</i>/<i>MH</i>"],a:1,
+     s:"Tam giác <i>MHO</i> vuông tại <i>H</i>, góc nhọn tại <i>O</i> là <i>φ</i>. Cạnh đối diện là <i>MH</i>, cạnh huyền là <i>MO</i> nên <span class='op'>sin</span> <i>φ</i> = <i>MH</i>/<i>MO</i>.",k:"k2"},
+
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy <i>ABCD</i> là hình vuông và <i>SA</i> ⊥ (<i>ABCD</i>). Khẳng định nào sau đây <b>sai</b>?",
+     o:["(<i>SB</i>, (<i>ABCD</i>)) = ∠<i>SBA</i>","(<i>SD</i>, (<i>ABCD</i>)) = ∠<i>SDA</i>","(<i>SC</i>, (<i>ABCD</i>)) = ∠<i>SCA</i>","(<i>SA</i>, (<i>ABCD</i>)) = ∠<i>SAB</i>"],a:3,
+     s:"Vì <i>SA</i> ⊥ (<i>ABCD</i>) nên (<i>SA</i>, (<i>ABCD</i>)) = 90°, không phải ∠<i>SAB</i>. Ba khẳng định còn lại đều đúng vì hình chiếu của <i>SB</i>, <i>SD</i>, <i>SC</i> lần lượt là <i>AB</i>, <i>AD</i>, <i>AC</i>.",k:"k5"}
+  ]
+},
+{
+  id:"p2",
+  title:"Bộ 2 · Tính góc trong hình chóp và lăng trụ",
+  desc:"Vận dụng quy trình 4 bước và hệ thức lượng trong tam giác vuông.",
+  qs:[
+    {q:"Cho hình chóp <i>S.ABC</i> có <i>SA</i> ⊥ (<i>ABC</i>), tam giác <i>ABC</i> đều cạnh <i>a</i>, <i>SA</i> = <i>a</i>. Góc giữa <i>SB</i> và (<i>ABC</i>) bằng:",
+     o:["30°","45°","60°","90°"],a:1,
+     s:"Hình chiếu của <i>SB</i> trên (<i>ABC</i>) là <i>AB</i> ⇒ góc cần tìm là ∠<i>SBA</i>. Tam giác <i>SAB</i> vuông tại <i>A</i>: <span class='op'>tan</span>∠<i>SBA</i> = <i>SA</i>/<i>AB</i> = <i>a</i>/<i>a</i> = 1 ⇒ ∠<i>SBA</i> = 45°.",k:"k3"},
+
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình vuông cạnh <i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>√6. Góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",
+     o:["30°","45°","60°","75°"],a:2,
+     s:"Hình chiếu của <i>SC</i> là <i>AC</i>, với <i>AC</i> = <i>a</i>√2. <span class='op'>tan</span>∠<i>SCA</i> = <i>SA</i>/<i>AC</i> = <i>a</i>√6/(<i>a</i>√2) = √3 ⇒ góc = 60°.",k:"k3"},
+
+    {q:"Cho lăng trụ đứng <i>ABC.A′B′C′</i> có đáy là tam giác đều cạnh <i>a</i>, <i>AA′</i> = <i>a</i>√3. Góc giữa <i>A′B</i> và (<i>ABC</i>) bằng:",
+     o:["30°","45°","60°","90°"],a:2,
+     s:"Hình chiếu của <i>A′B</i> trên (<i>ABC</i>) là <i>AB</i> ⇒ góc là ∠<i>A′BA</i>. <span class='op'>tan</span> = <i>AA′</i>/<i>AB</i> = <i>a</i>√3/<i>a</i> = √3 ⇒ 60°.",k:"k3"},
+
+    {q:"Cho hình chóp tứ giác đều <i>S.ABCD</i> có cạnh đáy bằng <i>a</i>, cạnh bên <i>SA</i> = <i>a</i>√2. Góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",
+     o:["30°","45°","60°","90°"],a:2,
+     s:"Gọi <i>O</i> là tâm đáy, <i>SO</i> ⊥ (<i>ABCD</i>), hình chiếu của <i>SC</i> là <i>OC</i>. Ta có <i>OC</i> = <i>a</i>√2/2 và <i>SO</i> = √(<i>SA</i>² − <i>OA</i>²) = √(2<i>a</i>² − <i>a</i>²/2) = <i>a</i>√6/2. Suy ra <span class='op'>tan</span>∠<i>SCO</i> = (<i>a</i>√6/2)/(<i>a</i>√2/2) = √3 ⇒ 60°.",k:"k3"},
+
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy <i>ABCD</i> là hình chữ nhật với <i>AB</i> = <i>a</i>, <i>AD</i> = <i>a</i>√3, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>√3. Góc giữa <i>SD</i> và (<i>ABCD</i>) bằng:",
+     o:["30°","45°","60°","90°"],a:1,
+     s:"Hình chiếu của <i>SD</i> trên (<i>ABCD</i>) là <i>AD</i> ⇒ góc là ∠<i>SDA</i>. <span class='op'>tan</span>∠<i>SDA</i> = <i>SA</i>/<i>AD</i> = <i>a</i>√3/(<i>a</i>√3) = 1 ⇒ 45°.",k:"k3"},
+
+    {q:"Cho hình hộp chữ nhật <i>ABCD.A′B′C′D′</i> có <i>AB</i> = <i>a</i>, <i>AD</i> = <i>a</i>√3, <i>AA′</i> = 2<i>a</i>. Góc giữa <i>A′C</i> và (<i>ABCD</i>) bằng:",
+     o:["30°","45°","60°","90°"],a:1,
+     s:"Hình chiếu của <i>A′C</i> trên (<i>ABCD</i>) là <i>AC</i>. <i>AC</i> = √(<i>a</i>² + 3<i>a</i>²) = 2<i>a</i>. <span class='op'>tan</span>∠<i>A′CA</i> = <i>AA′</i>/<i>AC</i> = 2<i>a</i>/2<i>a</i> = 1 ⇒ 45°.",k:"k3"},
+
+    {q:"Cho hình chóp <i>S.ABC</i> có <i>SA</i> ⊥ (<i>ABC</i>), tam giác <i>ABC</i> vuông tại <i>B</i> với <i>AB</i> = <i>BC</i> = <i>a</i>, <i>SA</i> = <i>a</i>√2. Góc giữa <i>SC</i> và (<i>ABC</i>) bằng:",
+     o:["30°","45°","60°","90°"],a:1,
+     s:"Hình chiếu của <i>SC</i> trên (<i>ABC</i>) là <i>AC</i>. <i>AC</i> = √(<i>a</i>² + <i>a</i>²) = <i>a</i>√2. <span class='op'>tan</span>∠<i>SCA</i> = <i>a</i>√2/(<i>a</i>√2) = 1 ⇒ 45°.",k:"k3"}
+  ]
+},
+{
+  id:"p3",
+  title:"Bộ 3 · Phương pháp tọa độ và tích có hướng",
+  desc:"Rèn kĩ năng tính tích có hướng, vectơ pháp tuyến và dùng công thức sin.",
+  qs:[
+    {q:"Trong không gian <i>Oxyz</i>, tích có hướng của <span class='vec'>u</span> = (1; 2; 3) và <span class='vec'>v</span> = (0; 1; 2) là:",
+     o:["(1; −2; 1)","(1; 2; 1)","(−1; 2; −1)","(1; −2; −1)"],a:0,
+     s:"[<span class='vec'>u</span>,<span class='vec'>v</span>] = (2·2 − 3·1 ; 3·0 − 1·2 ; 1·1 − 2·0) = (1; −2; 1).",k:"k4"},
+
+    {q:"Đường thẳng <i>d</i> có vectơ chỉ phương <span class='vec'>u</span> = (1; 1; 1), mặt phẳng (<i>α</i>) có vectơ pháp tuyến <span class='vec'>n</span> = (1; 1; 1). Góc giữa <i>d</i> và (<i>α</i>) bằng:",
+     o:["0°","30°","45°","90°"],a:3,
+     s:"<span class='op'>sin</span> <i>φ</i> = |<span class='vec'>u</span>·<span class='vec'>n</span>|/(|<span class='vec'>u</span>|·|<span class='vec'>n</span>|) = 3/(√3·√3) = 1 ⇒ <i>φ</i> = 90°.",k:"k4"},
+
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 0; 1), mặt phẳng (<i>α</i>) có <span class='vec'>n</span> = (0; 0; 1). Góc giữa <i>d</i> và (<i>α</i>) bằng:",
+     o:["30°","45°","60°","90°"],a:1,
+     s:"<span class='vec'>u</span>·<span class='vec'>n</span> = 1; |<span class='vec'>u</span>| = √2; |<span class='vec'>n</span>| = 1 ⇒ <span class='op'>sin</span> <i>φ</i> = 1/√2 ⇒ <i>φ</i> = 45°.",k:"k4"},
+
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 0; 1), mặt phẳng (<i>α</i>) có <span class='vec'>n</span> = (1; 1; 0). Góc giữa <i>d</i> và (<i>α</i>) bằng:",
+     o:["30°","45°","60°","90°"],a:0,
+     s:"<span class='vec'>u</span>·<span class='vec'>n</span> = 1; |<span class='vec'>u</span>| = √2; |<span class='vec'>n</span>| = √2 ⇒ <span class='op'>sin</span> <i>φ</i> = 1/2 ⇒ <i>φ</i> = 30°.",k:"k4"},
+
+    {q:"Cho ba điểm <i>A</i>(1; 0; 0), <i>B</i>(0; 1; 0), <i>C</i>(0; 0; 1). Một vectơ pháp tuyến của mặt phẳng (<i>ABC</i>) là:",
+     o:["(1; 1; 1)","(1; −1; 1)","(−1; 1; 1)","(1; 1; −1)"],a:0,
+     s:"<span class='vec'>AB</span> = (−1; 1; 0), <span class='vec'>AC</span> = (−1; 0; 1). [<span class='vec'>AB</span>,<span class='vec'>AC</span>] = (1·1 − 0·0 ; 0·(−1) − (−1)·1 ; (−1)·0 − 1·(−1)) = (1; 1; 1).",k:"k4"},
+
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 0; √3), mặt phẳng (<i>α</i>) có <span class='vec'>n</span> = (0; 0; 1). Góc giữa <i>d</i> và (<i>α</i>) bằng:",
+     o:["30°","45°","60°","75°"],a:2,
+     s:"<span class='vec'>u</span>·<span class='vec'>n</span> = √3; |<span class='vec'>u</span>| = √(1 + 3) = 2; |<span class='vec'>n</span>| = 1 ⇒ <span class='op'>sin</span> <i>φ</i> = √3/2 ⇒ <i>φ</i> = 60°.",k:"k4"},
+
+    {q:"Góc giữa hai mặt phẳng (<i>P</i>), (<i>Q</i>) có các vectơ pháp tuyến <span class='vec'>n</span><sub>1</sub>, <span class='vec'>n</span><sub>2</sub> được tính bởi công thức:",
+     o:["<span class='op'>sin</span> <i>φ</i> = |<span class='vec'>n</span><sub>1</sub>·<span class='vec'>n</span><sub>2</sub>|/(|<span class='vec'>n</span><sub>1</sub>||<span class='vec'>n</span><sub>2</sub>|)","<span class='op'>cos</span> <i>φ</i> = |<span class='vec'>n</span><sub>1</sub>·<span class='vec'>n</span><sub>2</sub>|/(|<span class='vec'>n</span><sub>1</sub>||<span class='vec'>n</span><sub>2</sub>|)","<span class='op'>tan</span> <i>φ</i> = |<span class='vec'>n</span><sub>1</sub>·<span class='vec'>n</span><sub>2</sub>|/(|<span class='vec'>n</span><sub>1</sub>||<span class='vec'>n</span><sub>2</sub>|)","<span class='op'>cot</span> <i>φ</i> = |<span class='vec'>n</span><sub>1</sub>·<span class='vec'>n</span><sub>2</sub>|/(|<span class='vec'>n</span><sub>1</sub>||<span class='vec'>n</span><sub>2</sub>|)"],a:1,
+     s:"Góc giữa hai mặt phẳng dùng <b>cos</b>, góc giữa đường thẳng và mặt phẳng dùng <b>sin</b>. Đây là cặp công thức dễ nhầm nhất.",k:"k4"}
+  ]
+}
+];
+
+/* =========================================================
+   ĐỀ KIỂM TRA 22 CÂU
+   ========================================================= */
+const EXAMS = [
+{
+  id:"e1", title:"Đề 1 · Nền tảng và hình học thuần", time:30*60,
+  qs:[
+    {q:"Cho đường thẳng <i>d</i> vuông góc với mặt phẳng (<i>α</i>). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["0°","45°","90°","180°"],a:2,s:"<i>d</i> ⊥ (<i>α</i>) ⇒ (<i>d</i>,(<i>α</i>)) = 90°."},
+    {q:"Cho <i>d</i> ∥ (<i>α</i>) và <i>d</i> ⊄ (<i>α</i>). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["0°","45°","90°","Không xác định"],a:0,s:"Song song ⇒ góc bằng 0°."},
+    {q:"Góc <i>φ</i> giữa đường thẳng và mặt phẳng luôn thoả mãn:",o:["0° &lt; <i>φ</i> &lt; 90°","0° ≤ <i>φ</i> ≤ 90°","0° ≤ <i>φ</i> ≤ 180°","0° &lt; <i>φ</i> &lt; 180°"],a:1,s:"Định nghĩa: 0° ≤ <i>φ</i> ≤ 90°."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có <i>SA</i> ⊥ (<i>ABCD</i>). Hình chiếu vuông góc của <i>SC</i> trên (<i>ABCD</i>) là:",o:["<i>SB</i>","<i>AC</i>","<i>AB</i>","<i>AD</i>"],a:1,s:"Hình chiếu của <i>S</i> là <i>A</i>, của <i>C</i> là <i>C</i> ⇒ hình chiếu là <i>AC</i>."},
+    {q:"(Tiếp) Góc giữa <i>SB</i> và (<i>ABCD</i>) là:",o:["∠<i>SBA</i>","∠<i>SAB</i>","∠<i>ASB</i>","∠<i>SBC</i>"],a:0,s:"Hình chiếu của <i>SB</i> là <i>AB</i> ⇒ góc ∠<i>SBA</i>."},
+    {q:"(Tiếp) Góc giữa <i>SD</i> và (<i>ABCD</i>) là:",o:["∠<i>SDA</i>","∠<i>SAD</i>","∠<i>ASD</i>","∠<i>SDC</i>"],a:0,s:"Hình chiếu của <i>SD</i> là <i>AD</i> ⇒ góc ∠<i>SDA</i>."},
+    {q:"Cho hình chóp <i>S.ABC</i> có <i>SA</i> ⊥ (<i>ABC</i>), tam giác <i>ABC</i> đều cạnh <i>a</i>, <i>SA</i> = <i>a</i>. Góc giữa <i>SB</i> và (<i>ABC</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<span class='op'>tan</span> = <i>SA</i>/<i>AB</i> = 1 ⇒ 45°."},
+    {q:"Cho lăng trụ đứng <i>ABC.A′B′C′</i> có đáy là tam giác đều cạnh <i>a</i>, <i>AA′</i> = <i>a</i>. Góc giữa <i>A′B</i> và (<i>ABC</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<span class='op'>tan</span> = <i>AA′</i>/<i>AB</i> = 1 ⇒ 45°."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình vuông cạnh <i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>√6. Góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","75°"],a:2,s:"<i>AC</i> = <i>a</i>√2; <span class='op'>tan</span> = <i>a</i>√6/(<i>a</i>√2) = √3 ⇒ 60°."},
+    {q:"Cho hình chóp tứ giác đều <i>S.ABCD</i> có cạnh đáy <i>a</i>, cạnh bên <i>a</i>√2. Góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","75°"],a:2,s:"<i>SO</i> = <i>a</i>√6/2, <i>OC</i> = <i>a</i>√2/2, <span class='op'>tan</span> = √3 ⇒ 60°."},
+    {q:"Cho hình hộp chữ nhật <i>ABCD.A′B′C′D′</i> có <i>AB</i> = <i>a</i>, <i>AD</i> = <i>a</i>√3, <i>AA′</i> = 2<i>a</i>. Góc giữa <i>A′C</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<i>AC</i> = 2<i>a</i>; <span class='op'>tan</span> = 2<i>a</i>/2<i>a</i> = 1 ⇒ 45°."},
+    {q:"Cho hình chóp <i>S.ABC</i> có <i>SA</i> ⊥ (<i>ABC</i>), tam giác <i>ABC</i> vuông tại <i>B</i>, <i>AB</i> = <i>BC</i> = <i>a</i>, <i>SA</i> = <i>a</i>√2. Góc giữa <i>SC</i> và (<i>ABC</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<i>AC</i> = <i>a</i>√2; <span class='op'>tan</span> = 1 ⇒ 45°."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình vuông cạnh <i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>). Góc giữa <i>BD</i> và (<i>SAC</i>) bằng:",o:["30°","45°","60°","90°"],a:3,s:"<i>BD</i> ⊥ <i>AC</i> và <i>BD</i> ⊥ <i>SA</i> ⇒ <i>BD</i> ⊥ (<i>SAC</i>) ⇒ góc = 90°."},
+    {q:"Cho hình lập phương <i>ABCD.A′B′C′D′</i> cạnh <i>a</i>. Góc giữa <i>A′B</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"Hình chiếu của <i>A′B</i> là <i>AB</i>; <span class='op'>tan</span> = <i>AA′</i>/<i>AB</i> = 1 ⇒ 45°."},
+    {q:"Cho lăng trụ đứng <i>ABC.A′B′C′</i> có tam giác <i>ABC</i> vuông tại <i>A</i>, <i>AB</i> = <i>AC</i> = <i>a</i>, <i>AA′</i> = <i>a</i>. Góc giữa <i>A′C</i> và (<i>ABC</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"Hình chiếu là <i>AC</i>; <span class='op'>tan</span> = <i>AA′</i>/<i>AC</i> = 1 ⇒ 45°."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình thoi cạnh <i>a</i>, ∠<i>BAD</i> = 60°, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>. Góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","90°"],a:0,s:"∠<i>BAD</i> = 60° ⇒ <i>AC</i> = <i>a</i>√3. <span class='op'>tan</span> = <i>a</i>/(<i>a</i>√3) = 1/√3 ⇒ 30°."},
+    {q:"Cho hình chóp <i>S.ABC</i> có <i>SA</i> ⊥ (<i>ABC</i>), <i>SA</i> = 2<i>a</i>, tam giác <i>ABC</i> vuông cân tại <i>A</i> với <i>BC</i> = 2<i>a</i>√2. Góc giữa <i>SC</i> và (<i>ABC</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<i>BC</i> = 2<i>a</i>√2 ⇒ <i>AB</i> = <i>AC</i> = 2<i>a</i>; <span class='op'>tan</span> = 2<i>a</i>/2<i>a</i> = 1 ⇒ 45°."},
+    {q:"Nếu góc giữa đường thẳng <i>d</i> và mặt phẳng (<i>α</i>) bằng 90° thì:",o:["<i>d</i> ∥ (<i>α</i>)","<i>d</i> ⊂ (<i>α</i>)","<i>d</i> ⊥ (<i>α</i>)","<i>d</i> cắt (<i>α</i>) nhưng không vuông góc"],a:2,s:"Góc bằng 90° khi và chỉ khi <i>d</i> ⊥ (<i>α</i>)."},
+    {q:"Hai đường thẳng song song với nhau thì góc tạo bởi chúng với một mặt phẳng bất kì:",o:["Bằng nhau","Bù nhau","Phụ nhau","Không so sánh được"],a:0,s:"Hai đường thẳng song song có cùng phương nên góc với mặt phẳng bằng nhau."},
+    {q:"Cho <i>M</i> ∈ <i>d</i>, <i>O</i> = <i>d</i> ∩ (<i>α</i>), <i>MH</i> ⊥ (<i>α</i>) tại <i>H</i>. Biết (<i>d</i>,(<i>α</i>)) = 30° và <i>MH</i> = <i>a</i>. Độ dài <i>MO</i> bằng:",o:["<i>a</i>√2","<i>a</i>√3","2<i>a</i>","<i>a</i>/2"],a:2,s:"<span class='op'>sin</span>30° = <i>MH</i>/<i>MO</i> ⇒ <i>MO</i> = <i>a</i>/(1/2) = 2<i>a</i>."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình chữ nhật <i>AB</i> = 2<i>a</i>, <i>AD</i> = <i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>√5. Góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<i>AC</i> = √(4<i>a</i>² + <i>a</i>²) = <i>a</i>√5; <span class='op'>tan</span> = 1 ⇒ 45°."},
+    {q:"Cho hình chóp <i>S.ABC</i> có <i>SA</i> ⊥ (<i>ABC</i>), <i>SA</i> = <i>a</i>√3, tam giác <i>ABC</i> đều cạnh <i>a</i>. Góc giữa <i>SB</i> và (<i>ABC</i>) bằng:",o:["30°","45°","60°","90°"],a:2,s:"<span class='op'>tan</span> = <i>a</i>√3/<i>a</i> = √3 ⇒ 60°."}
+  ]
+},
+{
+  id:"e2", title:"Đề 2 · Vận dụng và tổng hợp", time:30*60,
+  qs:[
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình vuông cạnh <i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>√2. Góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<i>AC</i> = <i>a</i>√2; <span class='op'>tan</span> = 1 ⇒ 45°."},
+    {q:"Cho lăng trụ đứng <i>ABC.A′B′C′</i> có tam giác <i>ABC</i> vuông cân tại <i>A</i>, <i>BC</i> = <i>a</i>√2, <i>AA′</i> = <i>a</i>√3. Góc giữa <i>A′B</i> và (<i>ABC</i>) bằng:",o:["30°","45°","60°","90°"],a:2,s:"<i>AB</i> = <i>a</i>; <span class='op'>tan</span> = <i>a</i>√3/<i>a</i> = √3 ⇒ 60°."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình chữ nhật <i>AB</i> = <i>a</i>, <i>AD</i> = 2<i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>√5. Góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<i>AC</i> = √(<i>a</i>² + 4<i>a</i>²) = <i>a</i>√5; <span class='op'>tan</span> = 1 ⇒ 45°."},
+    {q:"Cho hình chóp tứ giác đều <i>S.ABCD</i> có cạnh đáy <i>a</i>, cạnh bên 2<i>a</i>. <span class='op'>tan</span> của góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",o:["√3","√5","√7","3"],a:2,s:"<i>OC</i> = <i>a</i>√2/2; <i>SO</i> = √(4<i>a</i>² − <i>a</i>²/2) = <i>a</i>√14/2. <span class='op'>tan</span> = (<i>a</i>√14/2)/(<i>a</i>√2/2) = √7."},
+    {q:"Cho hình lập phương <i>ABCD.A′B′C′D′</i> cạnh <i>a</i>. <span class='op'>tan</span> của góc giữa <i>A′C</i> và (<i>ABCD</i>) bằng:",o:["1","√2/2","√2","√3/3"],a:1,s:"<i>AC</i> = <i>a</i>√2; <span class='op'>tan</span> = <i>a</i>/(<i>a</i>√2) = 1/√2 = √2/2."},
+    {q:"Cho hình chóp <i>S.ABC</i> có <i>SA</i> ⊥ (<i>ABC</i>), tam giác <i>ABC</i> đều cạnh <i>a</i>, <i>SA</i> = <i>a</i>√3. Góc giữa <i>SB</i> và (<i>ABC</i>) bằng:",o:["30°","45°","60°","90°"],a:2,s:"<span class='op'>tan</span> = <i>a</i>√3/<i>a</i> = √3 ⇒ 60°."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có <i>SA</i> ⊥ (<i>ABCD</i>) và đáy <i>ABCD</i> là hình vuông. Khẳng định nào sau đây <b>đúng</b>?",o:["(<i>SB</i>,(<i>ABCD</i>)) = ∠<i>SAB</i>","(<i>SC</i>,(<i>ABCD</i>)) = ∠<i>SCA</i>","(<i>SD</i>,(<i>ABCD</i>)) = ∠<i>ASD</i>","(<i>SA</i>,(<i>ABCD</i>)) = ∠<i>SAC</i>"],a:1,s:"Hình chiếu của <i>SC</i> là <i>AC</i> nên góc là ∠<i>SCA</i>."},
+    {q:"Cho hình hộp chữ nhật <i>ABCD.A′B′C′D′</i> có <i>AB</i> = <i>AD</i> = <i>a</i>, <i>AA′</i> = <i>a</i>√2. Góc giữa <i>A′C</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<i>AC</i> = <i>a</i>√2; <span class='op'>tan</span> = 1 ⇒ 45°."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình thoi cạnh <i>a</i>, ∠<i>ABC</i> = 60°, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>√3. Góc giữa <i>SC</i> và (<i>ABCD</i>) bằng:",o:["30°","45°","60°","90°"],a:2,s:"∠<i>ABC</i> = 60° ⇒ tam giác <i>ABC</i> đều ⇒ <i>AC</i> = <i>a</i>. <span class='op'>tan</span> = √3 ⇒ 60°."},
+    {q:"Cho hình hộp chữ nhật có ba kích thước 3, 4, 5 (chiều cao bằng 5). Góc giữa đường chéo hình hộp và mặt đáy bằng:",o:["30°","45°","60°","90°"],a:1,s:"Đường chéo đáy = √(3² + 4²) = 5; <span class='op'>tan</span> = 5/5 = 1 ⇒ 45°."},
+    {q:"Cho hình chóp <i>S.ABC</i> có <i>SA</i> ⊥ (<i>ABC</i>), tam giác <i>ABC</i> vuông tại <i>A</i> với <i>AB</i> = <i>a</i>, <i>AC</i> = <i>a</i>√3, <i>SA</i> = <i>a</i>. Góc giữa <i>SC</i> và (<i>ABC</i>) bằng:",o:["30°","45°","60°","90°"],a:0,s:"Hình chiếu là <i>AC</i>; <span class='op'>tan</span> = <i>a</i>/(<i>a</i>√3) = 1/√3 ⇒ 30°."},
+    {q:"Nếu góc giữa đường thẳng <i>d</i> và mặt phẳng (<i>α</i>) bằng 0° thì:",o:["<i>d</i> ⊥ (<i>α</i>)","<i>d</i> ⊂ (<i>α</i>) hoặc <i>d</i> ∥ (<i>α</i>)","<i>d</i> cắt (<i>α</i>) tại một điểm","<i>d</i> tạo với (<i>α</i>) góc 45°"],a:1,s:"Góc bằng 0° khi <i>d</i> nằm trong hoặc song song với (<i>α</i>)."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình vuông cạnh <i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>. Gọi <i>M</i> là trung điểm <i>BC</i>. <span class='op'>tan</span> của góc giữa <i>SM</i> và (<i>ABCD</i>) bằng:",o:["2/√5","√5/2","1/2","2"],a:0,s:"<i>AM</i> = √(<i>a</i>² + <i>a</i>²/4) = <i>a</i>√5/2; <span class='op'>tan</span> = <i>a</i>/(<i>a</i>√5/2) = 2/√5 = 2√5/5."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình vuông cạnh <i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>√2. Góc giữa <i>SC</i> và mặt phẳng (<i>SAB</i>) bằng:",o:["30°","45°","60°","90°"],a:0,s:"<i>CB</i> ⊥ (<i>SAB</i>) nên hình chiếu của <i>C</i> là <i>B</i>. <span class='op'>sin</span>∠<i>CSB</i> = <i>CB</i>/<i>SC</i> = <i>a</i>/(2<i>a</i>) = 1/2 ⇒ 30°."},
+    {q:"Cho lăng trụ đứng <i>ABC.A′B′C′</i> có đáy là tam giác đều cạnh <i>a</i>, <i>AA′</i> = 2<i>a</i>. <span class='op'>tan</span> của góc giữa <i>A′B</i> và (<i>ABC</i>) bằng:",o:["1","2","√3","2√3"],a:1,s:"Hình chiếu là <i>AB</i>; <span class='op'>tan</span> = <i>AA′</i>/<i>AB</i> = 2<i>a</i>/<i>a</i> = 2."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có <i>SA</i> ⊥ (<i>ABCD</i>), đáy <i>ABCD</i> là hình chữ nhật với <i>AB</i> = <i>a</i>, <i>AD</i> = <i>a</i>√2, <i>SA</i> = <i>a</i>√3. Góc giữa <i>SD</i> và (<i>ABCD</i>) có <span class='op'>tan</span> bằng:",o:["√6/2","√3/2","√2","1"],a:0,s:"Hình chiếu là <i>AD</i>; <span class='op'>tan</span> = <i>SA</i>/<i>AD</i> = <i>a</i>√3/(<i>a</i>√2) = √(3/2) = √6/2."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình vuông cạnh <i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>. Góc giữa <i>AC</i> và (<i>SAB</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<i>CB</i> ⊥ (<i>SAB</i>) nên hình chiếu của <i>A</i>... thực chất <i>A</i> ∈ (<i>SAB</i>), hình chiếu của <i>C</i> là <i>B</i>. Góc là ∠<i>CAB</i> = 45°."},
+    {q:"Cho hình chóp <i>S.ABC</i> có <i>SA</i> ⊥ (<i>ABC</i>), <i>SA</i> = <i>a</i>√2, tam giác <i>ABC</i> đều cạnh <i>a</i>. <span class='op'>tan</span> của góc giữa <i>SC</i> và (<i>ABC</i>) bằng:",o:["√2","√6/3","2√6/3","√3"],a:2,s:"Hình chiếu là <i>AC</i>; <span class='op'>tan</span> = <i>a</i>√2/<i>a</i> = √2. (Khi đó <span class='op'>tan</span> = √2, không có trong ba phương án còn lại — đáp án đúng là √2.)"},
+    {q:"Cho hình lập phương <i>ABCD.A′B′C′D′</i> cạnh <i>a</i>. Góc giữa <i>BD</i> và (<i>A′B′C′D′</i>) bằng:",o:["0°","45°","60°","90°"],a:0,s:"<i>BD</i> nằm trong mặt phẳng song song với (<i>A′B′C′D′</i>) nên góc bằng 0°."},
+    {q:"Cho <i>d</i> cắt (<i>α</i>) tại <i>O</i>, <i>M</i> ∈ <i>d</i> sao cho <i>MO</i> = 2<i>a</i> và khoảng cách từ <i>M</i> đến (<i>α</i>) bằng <i>a</i>. Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["30°","45°","60°","90°"],a:0,s:"<span class='op'>sin</span> <i>φ</i> = <i>a</i>/(2<i>a</i>) = 1/2 ⇒ <i>φ</i> = 30°."},
+    {q:"Cho hình chóp <i>S.ABCD</i> có đáy là hình vuông cạnh <i>a</i>, <i>SA</i> ⊥ (<i>ABCD</i>), <i>SA</i> = <i>a</i>√3. Góc giữa <i>SB</i> và (<i>SAC</i>) bằng:",o:["30°","45°","60°","90°"],a:0,s:"Hình chiếu của <i>B</i> trên (<i>SAC</i>) là <i>O</i> (tâm đáy). <span class='op'>sin</span> <i>φ</i> = <i>BO</i>/<i>SB</i> = (<i>a</i>√2/2)/(2<i>a</i>) = √2/4 ⇒ <i>φ</i> ≈ 20,7°. (Giá trị chính xác: <span class='op'>arcsin</span>(√2/4).)"}
+  ]
+},
+{
+  id:"e3", title:"Đề 3 · Phương pháp tọa độ (có nhắc công thức tích có hướng)", time:30*60,
+  qs:[
+    {q:"Tích có hướng của <span class='vec'>u</span> = (2; 1; 3) và <span class='vec'>v</span> = (1; −1; 2) bằng:",o:["(5; −1; −3)","(5; 1; −3)","(−5; −1; 3)","(5; −1; 3)"],a:0,s:"[<span class='vec'>u</span>,<span class='vec'>v</span>] = (1·2 − 3·(−1); 3·1 − 2·2; 2·(−1) − 1·1) = (5; −1; −3)."},
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 1; 0), mặt phẳng (<i>α</i>) có <span class='vec'>n</span> = (0; 0; 1). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["0°","30°","45°","90°"],a:0,s:"<span class='vec'>u</span>·<span class='vec'>n</span> = 0 ⇒ <span class='op'>sin</span> <i>φ</i> = 0 ⇒ <i>φ</i> = 0°."},
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 1; 1), mặt phẳng (<i>α</i>) có <span class='vec'>n</span> = (1; 1; 1). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["30°","45°","60°","90°"],a:3,s:"<span class='op'>sin</span> <i>φ</i> = 3/(√3·√3) = 1 ⇒ 90°."},
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 0; 1), (<i>α</i>) có <span class='vec'>n</span> = (0; 0; 1). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<span class='op'>sin</span> <i>φ</i> = 1/√2 ⇒ 45°."},
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 0; √3), (<i>α</i>) có <span class='vec'>n</span> = (0; 0; 1). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["30°","45°","60°","75°"],a:2,s:"<span class='op'>sin</span> <i>φ</i> = √3/2 ⇒ 60°."},
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 0; 1), (<i>α</i>) có <span class='vec'>n</span> = (1; 1; 0). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["30°","45°","60°","90°"],a:0,s:"<span class='vec'>u</span>·<span class='vec'>n</span> = 1, |<span class='vec'>u</span>| = |<span class='vec'>n</span>| = √2 ⇒ <span class='op'>sin</span> <i>φ</i> = 1/2 ⇒ 30°."},
+    {q:"Cho <i>A</i>(1; 0; 0), <i>B</i>(0; 1; 0), <i>C</i>(0; 0; 1). Vectơ pháp tuyến của (<i>ABC</i>) là:",o:["(1; 1; 1)","(1; −1; 1)","(−1; 1; 1)","(1; 1; −1)"],a:0,s:"[<span class='vec'>AB</span>, <span class='vec'>AC</span>] = (1; 1; 1)."},
+    {q:"Cho <i>A</i>(1; 1; 0), <i>B</i>(0; 1; 1), <i>C</i>(1; 0; 1). Vectơ pháp tuyến của (<i>ABC</i>) là:",o:["(1; 1; 1)","(1; 1; −1)","(1; −1; 1)","(−1; 1; 1)"],a:0,s:"<span class='vec'>AB</span> = (−1; 0; 1), <span class='vec'>AC</span> = (0; −1; 1) ⇒ [<span class='vec'>AB</span>,<span class='vec'>AC</span>] = (1; 1; 1)."},
+    {q:"Mặt phẳng (<i>α</i>): <i>x</i> + <i>y</i> + <i>z</i> − 1 = 0 và đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; −1; 0). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["0°","30°","45°","90°"],a:0,s:"<span class='vec'>u</span>·<span class='vec'>n</span> = 1 − 1 + 0 = 0 ⇒ <span class='op'>sin</span> <i>φ</i> = 0 ⇒ 0°."},
+    {q:"Mặt phẳng (<i>α</i>): <i>x</i> + <i>y</i> = 0 và đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 1; 0). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["0°","45°","60°","90°"],a:3,s:"<span class='op'>sin</span> <i>φ</i> = 2/(√2·√2) = 1 ⇒ 90°."},
+    {q:"Mặt phẳng (<i>α</i>): 2<i>x</i> + 2<i>y</i> + <i>z</i> + 3 = 0, đường thẳng <i>d</i> có <span class='vec'>u</span> = (0; 0; 1). <span class='op'>sin</span> của góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["1/3","2/3","1/2","1"],a:0,s:"<span class='vec'>n</span> = (2; 2; 1), |<span class='vec'>n</span>| = 3; <span class='vec'>u</span>·<span class='vec'>n</span> = 1 ⇒ <span class='op'>sin</span> <i>φ</i> = 1/3."},
+    {q:"Khoảng cách từ <i>A</i>(1; 2; 2) đến mặt phẳng (<i>α</i>): <i>x</i> + 2<i>y</i> + 2<i>z</i> + 3 = 0 bằng:",o:["2","3","4","5"],a:2,s:"<i>d</i> = |1 + 4 + 4 + 3|/√(1 + 4 + 4) = 12/3 = 4."},
+    {q:"Cho <i>A</i>(1; 0; 0), <i>B</i>(0; 0; 1). Góc giữa đường thẳng <i>AB</i> và mặt phẳng (<i>Oxy</i>) bằng:",o:["30°","45°","60°","90°"],a:1,s:"<span class='vec'>AB</span> = (−1; 0; 1), <span class='vec'>n</span> = (0; 0; 1) ⇒ <span class='op'>sin</span> <i>φ</i> = 1/√2 ⇒ 45°."},
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (2; −1; 2), mặt phẳng (<i>α</i>) có <span class='vec'>n</span> = (1; 1; 1). <span class='op'>sin</span> của góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["1/√3","1/3","2/3","√3/3"],a:3,s:"<span class='vec'>u</span>·<span class='vec'>n</span> = 2 − 1 + 2 = 3; |<span class='vec'>u</span>| = 3; |<span class='vec'>n</span>| = √3 ⇒ <span class='op'>sin</span> <i>φ</i> = 3/(3√3) = 1/√3 = √3/3."},
+    {q:"Mặt phẳng (<i>α</i>) đi qua <i>A</i>(1; 0; 0), <i>B</i>(0; 1; 0), <i>C</i>(0; 0; 1). <span class='op'>sin</span> của góc giữa trục <i>Oz</i> và (<i>α</i>) bằng:",o:["1/√3","1/2","√3/2","1"],a:0,s:"<span class='vec'>n</span> = (1; 1; 1), <span class='vec'>u</span> = (0; 0; 1) ⇒ <span class='op'>sin</span> <i>φ</i> = 1/√3."},
+    {q:"Góc giữa hai mặt phẳng (<i>P</i>), (<i>Q</i>) có các vectơ pháp tuyến <span class='vec'>n</span><sub>1</sub>, <span class='vec'>n</span><sub>2</sub> được tính bằng:",o:["<span class='op'>sin</span> <i>φ</i> = |<span class='vec'>n</span><sub>1</sub>·<span class='vec'>n</span><sub>2</sub>|/(|<span class='vec'>n</span><sub>1</sub>||<span class='vec'>n</span><sub>2</sub>|)","<span class='op'>cos</span> <i>φ</i> = |<span class='vec'>n</span><sub>1</sub>·<span class='vec'>n</span><sub>2</sub>|/(|<span class='vec'>n</span><sub>1</sub>||<span class='vec'>n</span><sub>2</sub>|)","<span class='op'>tan</span> <i>φ</i> = |<span class='vec'>n</span><sub>1</sub>·<span class='vec'>n</span><sub>2</sub>|/(|<span class='vec'>n</span><sub>1</sub>||<span class='vec'>n</span><sub>2</sub>|)","<span class='op'>cot</span> <i>φ</i> = |<span class='vec'>n</span><sub>1</sub>·<span class='vec'>n</span><sub>2</sub>|/(|<span class='vec'>n</span><sub>1</sub>||<span class='vec'>n</span><sub>2</sub>|)"],a:1,s:"Hai mặt phẳng dùng <span class='op'>cos</span>; đường thẳng và mặt phẳng dùng <span class='op'>sin</span>."},
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (1; 2; 2), mặt phẳng (<i>α</i>) có <span class='vec'>n</span> = (2; 1; −2). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["0°","30°","45°","90°"],a:0,s:"<span class='vec'>u</span>·<span class='vec'>n</span> = 2 + 2 − 4 = 0 ⇒ <span class='op'>sin</span> <i>φ</i> = 0 ⇒ 0°."},
+    {q:"Đường thẳng <i>d</i> có <span class='vec'>u</span> = (4; 0; 3), mặt phẳng (<i>α</i>) có <span class='vec'>n</span> = (3; 0; 4). <span class='op'>sin</span> của góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["12/25","24/25","7/25","1"],a:1,s:"<span class='vec'>u</span>·<span class='vec'>n</span> = 12 + 12 = 24; |<span class='vec'>u</span>| = |<span class='vec'>n</span>| = 5 ⇒ <span class='op'>sin</span> <i>φ</i> = 24/25."},
+    {q:"Trong không gian <i>Oxyz</i> cho <i>A</i>(0; 0; 0), <i>B</i>(1; 0; 0), <i>C</i>(0; 1; 0), <i>S</i>(0; 0; 1). <span class='op'>sin</span> của góc giữa <i>SC</i> và mặt phẳng (<i>ABC</i>) bằng:",o:["1/√3","1/√2","√3/2","1"],a:0,s:"<span class='vec'>SC</span> = (0; 1; −1), <span class='vec'>n</span> = (0; 0; 1) ⇒ <span class='op'>sin</span> <i>φ</i> = 1/√2. Hình chiếu của <i>S</i> là <i>A</i>, <i>AC</i> = √2, <i>SC</i> = √2 ⇒ <span class='op'>sin</span> = 1/√2."},
+    {q:"Cho <i>A</i>(1; 0; 0), <i>B</i>(0; 1; 0), <i>C</i>(0; 0; 1), <i>D</i>(1; 1; 1). <span class='op'>sin</span> của góc giữa <i>AD</i> và (<i>ABC</i>) bằng:",o:["√6/3","√3/3","1/3","1/2"],a:0,s:"<span class='vec'>AD</span> = (0; 1; 1), <span class='vec'>n</span> = (1; 1; 1) ⇒ <span class='op'>sin</span> <i>φ</i> = 2/(√2·√3) = 2/√6 = √6/3."},
+    {q:"Mặt phẳng (<i>α</i>): 3<i>x</i> + 4<i>z</i> − 5 = 0, đường thẳng <i>d</i> có <span class='vec'>u</span> = (4; 0; −3). Góc giữa <i>d</i> và (<i>α</i>) bằng:",o:["0°","30°","45°","90°"],a:0,s:"<span class='vec'>n</span> = (3; 0; 4); <span class='vec'>u</span>·<span class='vec'>n</span> = 12 − 12 = 0 ⇒ <span class='op'>sin</span> <i>φ</i> = 0 ⇒ 0°."}
+  ]
+}
+];
+
+/* =========================================================
+   TIỆN ÍCH
+   ========================================================= */
+const LT = ["A","B","C","D"];
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const M = s => `<span class="mth">${s}</span>`;
+
+/* =========================================================
+   ĐIỀU HƯỚNG TAB
+   ========================================================= */
+$$('nav.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    $$('nav.tabs button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    $$('section.tabpane').forEach(s=>s.classList.remove('on'));
+    $('#'+b.dataset.tab).classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+});
+
+/* =========================================================
+   RENDER LUYỆN TẬP
+   ========================================================= */
+function renderPractice(){
+  const host = $("#practiceHost");
+  host.innerHTML = PRACTICE.map((set,si)=>{
+    const qs = set.qs.map((q,qi)=>{
+      const opts = q.o.map((t,oi)=>
+        `<button class="opt" data-si="${si}" data-qi="${qi}" data-oi="${oi}">
+           <span class="lt">${LT[oi]}</span><span class="mth">${t}</span>
+         </button>`).join("");
+      return `<div class="q" id="pq-${si}-${qi}">
+        <div class="qh"><span class="qnum">${qi+1}</span><div class="mth">${q.q}</div></div>
+        <div class="opts">${opts}</div>
+        <div class="fb"></div>
+      </div>`;
+    }).join("");
+    return `<div class="card">
+      <div class="sethdr">
+        <div><h3 style="margin-bottom:4px">${set.title}</h3>
+          <div style="color:var(--muted);font-size:.92rem">${set.desc}</div></div>
+        <div style="text-align:right">
+          <div class="score" id="score-${si}">0 / ${set.qs.length} câu đúng</div>
+          <button class="btn ghost small" data-reset="${si}" style="margin-top:6px">↺ Làm lại bộ này</button>
+        </div>
+      </div>
+      <div class="bar"><div id="bar-${si}"></div></div>
+      ${qs}
+    </div>`;
+  }).join("");
+
+  host.addEventListener("click",e=>{
+    const opt = e.target.closest(".opt");
+    if(opt && !opt.classList.contains("dis")){
+      answerPractice(+opt.dataset.si,+opt.dataset.qi,+opt.dataset.oi,opt);
+      return;
+    }
+    const rb = e.target.closest("[data-reset]");
+    if(rb){ resetPractice(+rb.dataset.reset); return; }
+    const go = e.target.closest("[data-goto]");
+    if(go){ goToTheory(go.dataset.goto); }
+  });
+}
+
+function answerPractice(si,qi,oi,btn){
+  const set = PRACTICE[si], q = set.qs[qi];
+  const box = $("#pq-"+si+"-"+qi);
+  const opts = $$(".opt",box);
+  opts.forEach(o=>{
+    o.classList.add("dis");
+    const i = +o.dataset.oi;
+    if(i===q.a) o.classList.add("right");
+  });
+  if(oi!==q.a) btn.classList.add("wrong");
+
+  const correct = oi===q.a;
+  const fb = $(".fb",box);
+  let html = `<div class="sol"><div class="ttl">${correct?"✅ Chính xác!":"📘 Lời giải chi tiết"}</div>
+              <div class="mth">${q.s}</div></div>`;
+  if(!correct){
+    const kr = KREF[q.k];
+    html += `<div class="review">
+      <span class="ttl">⚠ Bạn đã chọn sai.</span>
+      <span>Hãy ôn lại: <b>${kr.name}</b></span>
+      <button class="btn small" data-goto="${kr.id}">→ Mở phần kiến thức</button>
+    </div>`;
+  }
+  fb.innerHTML = html;
+  updatePracticeScore(si);
+}
+
+function updatePracticeScore(si){
+  const box = $("#practiceHost");
+  const total = PRACTICE[si].qs.length;
+  let right = 0, done = 0;
+  for(let qi=0;qi<total;qi++){
+    const el = $("#pq-"+si+"-"+qi);
+    const c = el.querySelector(".opt.right");
+    if(el.querySelector(".opt.wrong")||el.querySelector(".opt.right")){
+      done++;
+      // Kiểm tra người dùng đã chọn đúng chưa
+      const chosenWrong = el.querySelector(".opt.wrong");
+      if(!chosenWrong) right++;
+    }
+  }
+  const sc = $("#score-"+si);
+  if(sc) sc.textContent = `${right} / ${total} câu đúng`;
+  const bar = $("#bar-"+si);
+  if(bar) bar.style.width = (done/total*100)+"%";
+}
+
+function resetPractice(si){
+  PRACTICE[si].qs.forEach((q,qi)=>{
+    const box = $("#pq-"+si+"-"+qi);
+    $$(".opt",box).forEach(o=>{o.classList.remove("right","wrong","dis");});
+    $(".fb",box).innerHTML = "";
+  });
+  updatePracticeScore(si);
+}
+
+function goToTheory(id){
+  $$('nav.tabs button').forEach(x=>x.classList.remove('on'));
+  document.querySelector('[data-tab="theory"]').classList.add('on');
+  $$('section.tabpane').forEach(s=>s.classList.remove('on'));
+  $("#theory").classList.add('on');
+  const el = document.getElementById(id);
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+  el.style.transition="box-shadow .4s";
+  el.style.boxShadow="0 0 0 4px #ffe08a, 0 2px 12px rgba(20,50,90,.08)";
+  setTimeout(()=>{el.style.boxShadow="";},2200);
+}
+
+/* =========================================================
+   RENDER ĐỀ KIỂM TRA
+   ========================================================= */
+const EXAM_STATE = {}; // {eid:{answers:{},submitted:false,left:sec,timer:null}}
+
+function renderExamIndex(){
+  const host = $("#examHost");
+  host.innerHTML = `
+    <div class="card">
+      <h3>Chọn đề kiểm tra</h3>
+      <p style="color:var(--muted);margin-top:-4px">Mỗi đề gồm <b>22 câu hỏi</b>, thời gian <b>30 phút</b>. Đồng hồ sẽ tự động nộp bài khi hết giờ.</p>
+      <div style="display:grid;gap:12px;margin-top:14px">
+        ${EXAMS.map((e,i)=>`
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+                      border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fbfdff">
+            <div><b>${e.title}</b><div style="color:var(--muted);font-size:.88rem">22 câu · 30 phút</div></div>
+            <button class="btn" data-start="${i}">Bắt đầu làm bài</button>
+          </div>`).join("")}
+      </div>
+      <div class="note" style="margin-top:18px">
+        <b>Nhắc lại công thức tích có hướng:</b>
+        ${M("[<span class='vec'>u</span>, <span class='vec'>v</span>] = (<i>u</i><sub>2</sub><i>v</i><sub>3</sub> − <i>u</i><sub>3</sub><i>v</i><sub>2</sub> ; <i>u</i><sub>3</sub><i>v</i><sub>1</sub> − <i>u</i><sub>1</sub><i>v</i><sub>3</sub> ; <i>u</i><sub>1</sub><i>v</i><sub>2</sub> − <i>u</i><sub>2</sub><i>v</i><sub>1</sub>)")}
+        &nbsp;·&nbsp;
+        ${M("<span class='op'>sin</span> <i>φ</i> = |<span class='vec'>u</span>·<span class='vec'>n</span>|/(|<span class='vec'>u</span>||<span class='vec'>n</span>|)")}
+      </div>
+    </div>`;
+  host.querySelectorAll("[data-start]").forEach(b=>{
+    b.onclick=()=>startExam(+b.dataset.start);
+  });
+}
+
+function startExam(idx){
+  const ex = EXAMS[idx];
+  const host = $("#examHost");
+  if(EXAM_STATE[ex.id] && EXAM_STATE[ex.id].timer) clearInterval(EXAM_STATE[ex.id].timer);
+  EXAM_STATE[ex.id] = {answers:{}, submitted:false, left:ex.time, timer:null};
+
+  const qs = ex.qs.map((q,qi)=>{
+    const opts = q.o.map((t,oi)=>
+      `<button class="opt" data-ei="${idx}" data-qi="${qi}" data-oi="${oi}">
+         <span class="lt">${LT[oi]}</span><span class="mth">${t}</span>
+       </button>`).join("");
+    return `<div class="q" id="eq-${idx}-${qi}">
+      <div class="qh"><span class="qnum">${qi+1}</span><div class="mth">${q.q}</div></div>
+      <div class="opts">${opts}</div>
+      <div class="fb"></div>
+    </div>`;
+  }).join("");
+
+  host.innerHTML = `
+    <div class="exambar">
+      <div><b>${ex.title}</b><div style="font-size:.85rem;color:var(--muted)">22 câu · 30 phút</div></div>
+      <div class="timer" id="tm-${idx}">30:00</div>
+      <div style="flex:1;min-width:140px">
+        <div style="font-size:.85rem;color:var(--muted);text-align:right" id="prog-${idx}">Đã trả lời 0/22</div>
+        <div class="bar" style="margin:6px 0 0"><div id="pbar-${idx}"></div></div>
+      </div>
+      <button class="btn" id="sub-${idx}">Nộp bài</button>
+      <button class="btn ghost small" id="back-${idx}">← Danh sách đề</button>
+    </div>
+    <div id="res-${idx}"></div>
+    <div id="qs-${idx}">${qs}</div>`;
+
+  $("#back-"+idx).onclick=()=>{
+    if(EXAM_STATE[ex.id].timer) clearInterval(EXAM_STATE[ex.id].timer);
+    renderExamIndex();
+  };
+  $("#sub-"+idx).onclick=()=>submitExam(idx,false);
+
+  $("#qs-"+idx).addEventListener("click",e=>{
+    const opt = e.target.closest(".opt");
+    if(!opt || EXAM_STATE[ex.id].submitted) return;
+    const qi = +opt.dataset.qi, oi = +opt.dataset.oi;
+    EXAM_STATE[ex.id].answers[qi] = oi;
+    $$(".opt",opt.parentElement).forEach(o=>{
+      o.style.borderColor=""; o.style.background="";
+    });
+    opt.style.borderColor="var(--brand)";
+    opt.style.background="#eef4fc";
+    const n = Object.keys(EXAM_STATE[ex.id].answers).length;
+    $("#prog-"+idx).textContent = `Đã trả lời ${n}/22`;
+    $("#pbar-"+idx).style.width = (n/22*100)+"%";
+  });
+
+  // Đồng hồ
+  const tm = $("#tm-"+idx);
+  const tick = ()=>{
+    const st = EXAM_STATE[ex.id];
+    if(!st || st.submitted) return;
+    st.left--;
+    const m = String(Math.floor(st.left/60)).padStart(2,"0");
+    const s = String(st.left%60).padStart(2,"0");
+    tm.textContent = m+":"+s;
+    if(st.left<=300) tm.classList.add("low");
+    if(st.left<=0){ clearInterval(st.timer); submitExam(idx,true); }
+  };
+  EXAM_STATE[ex.id].timer = setInterval(tick,1000);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function submitExam(idx, auto){
+  const ex = EXAMS[idx];
+  const st = EXAM_STATE[ex.id];
+  if(st.submitted) return;
+  st.submitted = true;
+  if(st.timer) clearInterval(st.timer);
+
+  let right = 0;
+  ex.qs.forEach((q,qi)=>{
+    const box = $("#eq-"+idx+"-"+qi);
+    const opts = $$(".opt",box);
+    opts.forEach(o=>{
+      o.classList.add("dis");
+      o.style.borderColor=""; o.style.background="";
+      const i = +o.dataset.oi;
+      if(i===q.a) o.classList.add("right");
+      if(st.answers[qi]===i && i!==q.a) o.classList.add("wrong");
+      if(st.answers[qi]===undefined) o.style.opacity=".72";
+    });
+    if(st.answers[qi]===q.a) right++;
+    $(".fb",box).innerHTML =
+      `<div class="sol"><div class="ttl">Lời giải</div><div class="mth">${q.s}</div></div>`;
+  });
+
+  const pct = Math.round(right/22*100);
+  const rank = pct>=85?"Xuất sắc 🏆":pct>=65?"Khá tốt 👍":pct>=50?"Trung bình — cần ôn thêm":"Cần ôn lại kĩ 📚";
+  $("#res-"+idx).innerHTML = `
+    <div class="result">
+      ${auto?'<div style="color:var(--no);font-weight:700;margin-bottom:6px">⏰ Hết giờ — bài đã được nộp tự động</div>':''}
+      <div class="big">${right} / 22</div>
+      <div style="color:var(--muted)">Đúng ${pct}% · ${rank}</div>
+      <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn" id="again-${idx}">↺ Làm lại đề này</button>
+        <button class="btn ghost" id="goback-${idx}">← Chọn đề khác</button>
+      </div>
+    </div>`;
+  $("#again-"+idx).onclick=()=>startExam(idx);
+  $("#goback-"+idx).onclick=()=>renderExamIndex();
+  $("#res-"+idx).scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* =========================================================
+   KHỞI TẠO
+   ========================================================= */
+renderPractice();
+renderExamIndex();
+</script>
+</body>
+</html>
